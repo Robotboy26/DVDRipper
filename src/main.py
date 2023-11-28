@@ -1,4 +1,4 @@
-import pydvdread
+import dvdread
 import sys
 
 # Specify the path to the input DVD
