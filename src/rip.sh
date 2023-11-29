@@ -7,6 +7,7 @@ list=(1)
 echo $list
 
 content=""
+# todo make multithreaded
 for index in "${!list[@]}"; do
 	makemkvcon info ./rom${list[index]} -r > read${list[index]}.txt
 
