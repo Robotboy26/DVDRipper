@@ -23,7 +23,7 @@ for index in "${!list[@]}"; do
 	mkdir "$content"
 	cp read${list[index]}.txt "$content/$content.info.log"
 	rm read${list[index]}.txt
-	makemkvcon mkv ./rom${list[index]} all "./$content" > "$content/$content.rip.log"
+	makemkvcon mkv ./rom${list[index]} 1 "./$content" > "$content/$content.rip.log"
 done
 
 #makemkvcon mkv disc:0 all ./test
