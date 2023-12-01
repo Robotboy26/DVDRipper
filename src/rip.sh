@@ -21,12 +21,13 @@ for index in "${!list[@]}"; do
 	  done < "read${list[index]}.txt"
 
 	mkdir "$content"
- 	mkdir "$content/$content backup"
+ 	mkdir "$content/iso"
 	cp read${list[index]}.txt "$content/$content.info.log"
 	rm read${list[index]}.txt
 	makemkvcon mkv ./rom${list[index]} 1 "./$content" > "$content/$content.rip.log"
  	blocks=$(isosize -d 2048 /dev/sr0)
- 	name=$"/$content/$content backup/$content.iso"
+ 	name=$"/$content/iso/$content.iso"
+  	touch $name
  	sudo dd if=/dev/sr0 of=$name bs=2048 count=$blocks status=progress
 done
 
