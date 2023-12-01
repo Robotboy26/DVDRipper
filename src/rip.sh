@@ -26,7 +26,4 @@ for index in "${!list[@]}"; do
  	sudo dd if=/dev/sr0 "of=$content/iso/$content.iso" bs=2048 count=$blocks status=progress
 done
 
-This modified script will use the `parallel` command to execute the loop iterations in parallel, utilizing multiple threads to process the tasks more efficiently.
-
-
 #makemkvcon mkv disc:0 all ./test
