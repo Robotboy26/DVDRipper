@@ -25,7 +25,7 @@ for index in "${!list[@]}"; do
 	cp read${list[index]}.txt "$content/$content.info.log"
 	rm read${list[index]}.txt
 	makemkvcon mkv ./rom${list[index]} 1 "./$content" > "$content/$content.rip.log"
- 	sudo dd if=/dev/sr0 of=/$content/$content\ backup/$content.iso bs=2048 count=$blocks status=progress
+ 	sudo dd if=/dev/sr0 of="/$content/$content backup/$content.iso" bs=2048 count=$blocks status=progress
 done
 
 #makemkvcon mkv disc:0 all ./test
