@@ -21,7 +21,7 @@ parallel -j "$(nproc)" -k --line-buffer <<EOF
     mkdir "\$content/iso"
     cp read${list[index]}.txt "\$content/\$content.info.log"
     rm read${list[index]}.txt
-    makemkvcon mkv ./rom${list[index]} 1 "./\$content" > "\$content/\$content.rip.log"
+    makemkvcon mkv ./rom${list[index]} 0 "./\$content" > "\$content/\$content.rip.log"
     
     blocks=\$(isosize -d 2048 /dev/sr0)
     touch "\$content/iso/\$content.iso"
