@@ -26,7 +26,7 @@ for index in "${!list[@]}"; do
 	rm read${list[index]}.txt
 	makemkvcon mkv ./rom${list[index]} 1 "./$content" > "$content/$content.rip.log"
  	blocks=$(isosize -d 2048 /dev/sr0)
-  	touch "/$content/iso/$content.iso"
+  	touch "$content/iso/$content.iso"
  	sudo dd if=/dev/sr0 "of=/$content/iso/$content.iso" bs=2048 count=$blocks status=progress
 done
 
