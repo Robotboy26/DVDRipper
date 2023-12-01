@@ -4,31 +4,27 @@
 
 list=(1)
 
-parallel -j "$(nproc)" -k --line-buffer <<EOF
-  for index in "${!list[@]}"; do
+for index in "${!list[@]}"; do
     makemkvcon info ./rom${list[index]} -r > read${list[index]}.txt
-    
-    while IFS= read -r line; do
-      if [[ \$line == *"CINFO:2,0,"* ]]; then
-  	      # Extracting the content inside the double quotes
-  	      content=\$(echo "\$line" | grep -o "\"[^\"]*\"" | sed 's/"//g')
-  	      echo "\$content is now being ripped"
-  	      break
-  	    fi
-  	done < "read${list[index]}.txt"
-    
-    mkdir "\$content"
-    mkdir "\$content/iso"
-    cp read${list[index]}.txt "\$content/\$content.info.log"
-    rm read${list[index]}.txt
-    makemkvcon mkv ./rom${list[index]} 0 "./\$content" > "\$content/\$content.rip.log"
-    
-    blocks=\$(isosize -d 2048 /dev/sr0)
-    touch "\$content/iso/\$content.iso"
-    sudo dd if=/dev/sr0 "of=\$content/iso/\$content.iso" bs=2048 count=\$blocks status=progress
-  done
-EOF
-```
+
+	while IFS= read -r line; do
+	    if [[ $line == *"CINFO:2,0,"* ]]; then
+	      # Extracting the content inside the double quotes
+	      content=$(echo "$line" | grep -o "\"[^\"]*\"" | sed 's/"//g')
+	      echo "$content is now being ripped"
+	      break
+	    fi
+	  done < "read${list[index]}.txt"
+
+	mkdir "$content"
+ 	mkdir "$content/iso"
+	cp read${list[index]}.txt "$content/$content.info.log"
+	rm read${list[index]}.txt
+	makemkvcon mkv ./rom${list[index]} 1 "./$content" > "$content/$content.rip.log"
+ 	blocks=$(isosize -d 2048 /dev/sr0)
+  	touch "$content/iso/$content.iso"
+ 	sudo dd if=/dev/sr0 "of=$content/iso/$content.iso" bs=2048 count=$blocks status=progress
+done
 
 This modified script will use the `parallel` command to execute the loop iterations in parallel, utilizing multiple threads to process the tasks more efficiently.
 
