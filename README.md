@@ -1,2 +1,2 @@
 # DVDRipper
-This is a python dvd ripper.
+This is a dvd ripper.
