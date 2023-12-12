@@ -2,15 +2,15 @@
 
 #makemkvcon info ./rom1 -r
 
-list=(0)
+list=(1)
 
 for index in "${!list[@]}"; do
-    dvdbackup -i /dev/sr${list[index]} -I -v > read${list[index]}.txt
+    makemkvcon info /dev/sr${list[index]} -r > read${list[index]}.txt
 
 	while IFS= read -r line; do
-	    if [[ line=$(grep "$search" "$file" | sed -n 's/.*\(".*"\).*/\1/p') ]]; then
+	    if [[ $line == *"CINFO:2,0,"* ]]; then
 	      # Extracting the content inside the double quotes
-	      content=$(echo "$line" | awk -F'"' '{print $2}')
+	      content=$(echo "$line" | grep -o "\"[^\"]*\"" | sed 's/"//g')
 	      echo "$content is now being ripped"
 	      break
 	    fi
@@ -20,11 +20,7 @@ for index in "${!list[@]}"; do
  	mkdir "$content/iso"
 	cp read${list[index]}.txt "$content/$content.info.log"
 	rm read${list[index]}.txt
-  dvdbackup -i /dev/sr${list[index]} -o "$content" -F -p
-  # Convert the ripped track to MKV using ffmpeg
-  input_vob="$(ls -1 "$content" | grep "vob$")"
-  output_file="$content/$content.mkv"
-  ffmpeg -i "$content/$input_vob" -c:v copy -c:a copy -map 0 "$output_file"
+	makemkvcon mkv /dev/sr${list[index]} 0 "./$content" > "$content/$content.rip.log"
  	blocks=$(isosize -d 2048 /dev/sr0)
   	touch "$content/iso/$content.iso"
  	sudo dd if=/dev/sr${list[index]} "of=$content/iso/$content.iso" bs=2048 count=$blocks status=progress
