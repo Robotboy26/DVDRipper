@@ -1,20 +1,10 @@
-# makemkvcon info ./rom1 -r > read1.txt
-
-#makemkvcon info ./rom1 -r
-
 list=(0)
 
 for index in "${!list[@]}"; do
     dvdbackup -i /dev/sr${list[index]} -I -v > read${list[index]}.txt
 
-	while IFS= read -r line; do
-	    if [[ line=$(grep "$search" "$file" | sed -n 's/.*\(".*"\).*/\1/p') ]]; then
-	      # Extracting the content inside the double quotes
-	      content=$(echo "$line" | awk -F'"' '{print $2}')
-	      echo "$content is now being ripped"
-	      break
-	    fi
-	  done < "read${list[index]}.txt"
+  content=$(grep 'DVD-Video information of the DVD with title' "read${list[index]}.txt" | sed 's/.*"\(.*\)"/\1/')
+  echo "$content is now being ripped"
 
 	mkdir "$content"
  	mkdir "$content/iso"
@@ -22,12 +12,9 @@ for index in "${!list[@]}"; do
 	rm read${list[index]}.txt
   dvdbackup -i /dev/sr${list[index]} -o "$content" -F -p
   # Convert the ripped track to MKV using ffmpeg
-  input_vob="$(ls -1 "$content" | grep "vob$")"
   output_file="$content/$content.mkv"
-  ffmpeg -i "$content/$input_vob" -c:v copy -c:a copy -map 0 "$output_file"
+  # now get the main title in mkv format
  	blocks=$(isosize -d 2048 /dev/sr0)
-  	touch "$content/iso/$content.iso"
+  touch "$content/iso/$content.iso"
  	sudo dd if=/dev/sr${list[index]} "of=$content/iso/$content.iso" bs=2048 count=$blocks status=progress
 done
-
-#makemkvcon mkv disc:0 all ./test
